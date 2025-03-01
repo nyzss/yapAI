@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from "react";
 import ShikiHighlighter, { type Element } from "react-shiki";
-
+import CopyButton from "@/components/ui/copy-button";
 interface CodeHighlightProps {
   className?: string | undefined;
   children?: ReactNode | undefined;
@@ -15,9 +15,22 @@ export const CodeHighlight = ({
   const match = className?.match(/language-(\w+)/);
   const language = match ? match[1] : undefined;
 
+  if (!language) {
+    return (
+      <code {...props} className="bg-muted rounded-md p-1">
+        {String(children)}
+      </code>
+    );
+  }
+
   return (
-    <ShikiHighlighter language={language} theme={"houston"} {...props}>
-      {String(children)}
-    </ShikiHighlighter>
+    <div className="relative">
+      <ShikiHighlighter language={language} theme={"light-plus"} {...props}>
+        {String(children)}
+      </ShikiHighlighter>
+      <div className="absolute right-2 bottom-2">
+        <CopyButton text={String(children)} className="bg-muted" />
+      </div>
+    </div>
   );
 };
