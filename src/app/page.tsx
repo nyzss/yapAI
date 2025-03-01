@@ -1,7 +1,9 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
+import Markdown from "react-markdown";
 import { useChat } from "@ai-sdk/react";
+import { CodeHighlight } from "@/components/chat/code";
 
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
@@ -13,7 +15,14 @@ export default function Home() {
       {messages.map((m) => (
         <div key={m.id} className="whitespace-pre-wrap">
           {m.role === "user" ? "User: " : "AI: "}
-          {m.content}
+
+          <Markdown
+            components={{
+              code: CodeHighlight,
+            }}
+          >
+            {m.content}
+          </Markdown>
         </div>
       ))}
 
