@@ -8,6 +8,7 @@ import { useLocalStorageState } from "ahooks";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   const [messageHistory, setMessageHistory] = useLocalStorageState<Message[]>(
@@ -74,11 +75,12 @@ export default function Home() {
               className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
             >
               <div
-                className={`${
+                className={cn(
+                  "prose prose-neutral dark:prose-invert",
                   m.role === "user"
                     ? "bg-muted text-primary max-w-[80%] rounded-lg p-4 break-words"
-                    : "max-w-[80%] rounded-lg p-4 break-words"
-                }`}
+                    : "max-w-[80%] rounded-lg p-4 break-words",
+                )}
               >
                 <Markdown
                   components={{

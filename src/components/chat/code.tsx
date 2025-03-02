@@ -25,7 +25,7 @@ export const CodeHighlight = ({
 
   return (
     <div className="relative">
-      <ShikiHighlighter language={language} theme={"light-plus"} {...props}>
+      <ShikiHighlighter language={language} theme={"github-light"} {...props}>
         {String(children)}
       </ShikiHighlighter>
       <div className="absolute right-2 bottom-2">
