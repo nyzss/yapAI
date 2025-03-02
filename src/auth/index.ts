@@ -1,3 +1,5 @@
+export * from "./client";
+
 import { betterAuth } from "better-auth";
 import { env } from "@/lib/env";
 import { db } from "@/db";
