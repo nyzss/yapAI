@@ -1,24 +1,34 @@
 import { Hono } from "hono";
 import { handle } from "hono/vercel";
-import { CoreMessage, streamText } from "ai";
-import { openai } from "@ai-sdk/openai";
 import { auth } from "@/auth";
+import { chatRoute } from "./routes/chat";
 
-const app = new Hono()
+export type HonoType = {
+  Variables: {
+    user: typeof auth.$Infer.Session.user | null;
+    session: typeof auth.$Infer.Session.session | null;
+  };
+};
+
+const app = new Hono<HonoType>()
   .basePath("/api")
+  .use("*", async (c, next) => {
+    const session = await auth.api.getSession({ headers: c.req.raw.headers });
+
+    if (!session) {
+      c.set("user", null);
+      c.set("session", null);
+      return next();
+    }
+
+    c.set("user", session.user);
+    c.set("session", session.session);
+    return next();
+  })
 
   .on(["POST", "GET"], "/auth/**", (c) => auth.handler(c.req.raw))
 
-  .post("/chat", async (c) => {
-    const { messages }: { messages: CoreMessage[] } = await c.req.json();
-
-    const response = streamText({
-      model: openai("gpt-4o-mini"),
-      messages,
-    });
-
-    return response.toDataStreamResponse();
-  });
+  .route("/chat", chatRoute);
 
 export const AppType = typeof app;
 
