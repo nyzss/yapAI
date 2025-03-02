@@ -1,16 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  BookOpen,
-  Bot,
-  Command,
-  LifeBuoy,
-  MessageCirclePlus,
-  Send,
-  Settings2,
-  SquareTerminal,
-} from "lucide-react";
+import { Command, MessageCirclePlus } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -28,117 +19,116 @@ import Link from "next/link";
 const data = {
   navMain: [
     {
-      title: "Playground",
+      title: "Chat History",
       url: "#",
-      icon: SquareTerminal,
       isActive: true,
       type: "folder",
       items: [
         {
-          title: "History",
+          title: "Discussing AI Ethics",
           url: "#",
         },
         {
-          title: "Starred",
+          title: "Understanding Quantum Computing",
           url: "#",
         },
         {
-          title: "Settings",
+          title: "Exploring Space Technologies",
           url: "#",
         },
       ],
     },
     {
-      title: "Models",
+      title: "AI Conversations",
       url: "#",
-      icon: Bot,
       type: "folder",
       items: [
         {
-          title: "Genesis",
+          title: "Future of Machine Learning",
           url: "#",
         },
         {
-          title: "Explorer",
+          title: "AI in Everyday Life",
           url: "#",
         },
         {
-          title: "Quantum",
+          title: "Deep Learning Breakthroughs",
           url: "#",
         },
       ],
     },
     {
-      title: "Documentation",
+      title: "Tech Discussions",
       url: "#",
-      icon: BookOpen,
       type: "folder",
       items: [
         {
-          title: "Introduction",
+          title: "Latest in Web Development",
           url: "#",
         },
         {
-          title: "Get Started",
+          title: "Cybersecurity Trends",
           url: "#",
         },
         {
-          title: "Tutorials",
+          title: "Blockchain Innovations",
           url: "#",
         },
         {
-          title: "Changelog",
+          title: "Cloud Computing Advances",
           url: "#",
         },
       ],
     },
     {
-      title: "Settings",
+      title: "User Settings",
       url: "#",
-      icon: Settings2,
       type: "chat",
       items: [
         {
-          title: "General",
+          title: "Profile",
           url: "#",
         },
         {
-          title: "Team",
+          title: "Notifications",
           url: "#",
         },
         {
-          title: "Billing",
+          title: "Privacy",
           url: "#",
         },
         {
-          title: "Limits",
+          title: "Account",
           url: "#",
         },
       ],
-    },
-  ],
-  navSecondary: [
-    {
-      title: "Support",
-      url: "#",
-      icon: LifeBuoy,
-    },
-    {
-      title: "Feedback",
-      url: "#",
-      icon: Send,
-    },
-  ],
-  projects: [
-    {
-      name: "New Chat",
-      url: "/chat",
-      icon: MessageCirclePlus,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  // const router = useRouter();
+
+  // const createChatMutation = useMutation({
+  //   mutationFn: async () => {
+  //     const response = await client.api.chat.create.$post();
+
+  //     const data = await response.json();
+
+  //     if (data.error !== null) {
+  //       throw new Error(data.error);
+  //     }
+
+  //     return data;
+  //   },
+  // });
+
+  // const handleCreateChat = async () => {
+  //   const data = await createChatMutation.mutateAsync();
+
+  //   router.push(`/chat/${data.chat.id}`);
+  // };
+
   return (
     <Sidebar variant="floating" {...props}>
       <SidebarHeader>

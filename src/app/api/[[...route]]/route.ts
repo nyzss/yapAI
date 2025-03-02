@@ -30,7 +30,7 @@ const app = new Hono<HonoType>()
 
   .route("/chat", chatRoute);
 
-export const AppType = typeof app;
+export type AppType = typeof app;
 
 export const GET = handle(app);
 export const POST = handle(app);

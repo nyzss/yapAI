@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, type LucideIcon } from "lucide-react";
+import { ChevronRight, Folder } from "lucide-react";
 
 import {
   Collapsible,
@@ -25,7 +25,6 @@ export function NavMain({
   items: {
     title: string;
     url: string;
-    icon: LucideIcon;
     type: string;
     isActive?: boolean;
     items?: {
@@ -56,7 +55,7 @@ export function NavMain({
                         className="bg-muted cursor-pointer"
                         variant={"outline"}
                       >
-                        {item.icon && <item.icon />}
+                        <Folder />
                         <span>{item.title}</span>
                         <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
                       </SidebarMenuButton>
@@ -80,7 +79,6 @@ export function NavMain({
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
                     <a href={item.url}>
-                      <item.icon />
                       <span>{item.title}</span>
                     </a>
                   </SidebarMenuButton>
