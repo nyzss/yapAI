@@ -1,15 +1,20 @@
 "use client";
 
 import { Message, useChat } from "@ai-sdk/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, memo } from "react";
 import MessageHistory from "@/components/chat/message-history";
 import ChatInput from "./chat-input";
 import { useQuery } from "@tanstack/react-query";
 import { client } from "@/lib/rpc";
 import { useRouter } from "next/navigation";
 
+// Memoize MessageHistory to prevent re-renders when parent state changes
+const MemoizedMessageHistory = memo(MessageHistory);
+
 export default function Chat({ id }: { id: string | null }) {
   const router = useRouter();
+  const [isStreaming, setIsStreaming] = useState(false);
+
   const { data: chatData } = useQuery({
     queryKey: ["chat", id],
     queryFn: async () => {
@@ -24,26 +29,40 @@ export default function Chat({ id }: { id: string | null }) {
     },
     enabled: id !== null,
   });
-  //   const [input, setInput] = useState("");
+
   const [chatId, setChatId] = useState<string>(id ?? "");
 
-  const { messages, handleSubmit, input, setInput, setMessages } = useChat({
+  const { messages, setInput, setMessages, status, handleSubmit } = useChat({
     id: chatId,
     api: "/api/chat",
     experimental_prepareRequestBody({ messages, id }) {
       return { message: messages[messages.length - 1], id };
     },
     sendExtraMessageFields: true,
+    onResponse: () => {
+      setIsStreaming(true);
+    },
+    onFinish: () => {
+      setIsStreaming(false);
+    },
   });
 
-  const handleChatSubmit = () => {
-    if (!id) {
-      const newChatId = crypto.randomUUID();
-      setChatId(newChatId);
-      router.push(`/c/${newChatId}`);
-    }
-    handleSubmit();
-  };
+  const handleMessageSubmit = useCallback(
+    (message: string) => {
+      if (!id) {
+        const newChatId = crypto.randomUUID();
+        setChatId(newChatId);
+        router.push(`/c/${newChatId}`);
+      }
+
+      setInput(message);
+
+      setTimeout(() => {
+        handleSubmit();
+      }, 0);
+    },
+    [id, handleSubmit, router, setInput],
+  );
 
   useEffect(() => {
     if (chatData?.error === null) {
@@ -54,12 +73,11 @@ export default function Chat({ id }: { id: string | null }) {
 
   return (
     <div className="absolute inset-0 flex flex-col">
-      <MessageHistory messages={messages} />
+      <MemoizedMessageHistory messages={messages} />
 
       <ChatInput
-        input={input}
-        setInput={setInput}
-        handleChatSubmit={handleChatSubmit}
+        onSubmit={handleMessageSubmit}
+        isDisabled={status === "streaming" || isStreaming}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 import type { JSX, ReactNode } from "react";
 import ShikiHighlighter, { isInlineCode, type Element } from "react-shiki";
-import CopyButton from "@/components/ui/copy-button";
+import CopyButton from "@/components/ui/copy-button-me";
 interface CodeHighlightProps {
   className?: string | undefined;
   children?: ReactNode | undefined;

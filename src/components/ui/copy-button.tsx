@@ -1,71 +1,44 @@
 "use client";
 
+import { Check, Copy } from "lucide-react";
+
 import { cn } from "@/lib/utils";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { CheckIcon, CopyIcon } from "lucide-react";
-import { useState } from "react";
 
-export default function CopyButton({
-  text,
-  ...props
-}: { text: string } & React.ComponentProps<"button">) {
-  const [copied, setCopied] = useState<boolean>(false);
+type CopyButtonProps = {
+  content: string;
+  copyMessage?: string;
+};
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText(text);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1500);
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  };
+export function CopyButton({ content, copyMessage }: CopyButtonProps) {
+  const { isCopied, handleCopy } = useCopyToClipboard({
+    text: content,
+    copyMessage,
+  });
 
   return (
-    <TooltipProvider delayDuration={0}>
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <Button
-            variant="outline"
-            size="icon"
-            className="disabled:opacity-100"
-            onClick={handleCopy}
-            aria-label={copied ? "Copied" : "Copy to clipboard"}
-            disabled={copied}
-            {...props}
-          >
-            <div
-              className={cn(
-                "transition-all",
-                copied ? "scale-100 opacity-100" : "scale-0 opacity-0",
-              )}
-            >
-              <CheckIcon
-                className="stroke-emerald-500"
-                size={16}
-                aria-hidden="true"
-              />
-            </div>
-            <div
-              className={cn(
-                "absolute transition-all",
-                copied ? "scale-0 opacity-0" : "scale-100 opacity-100",
-              )}
-            >
-              <CopyIcon size={16} aria-hidden="true" />
-            </div>
-          </Button>
-        </TooltipTrigger>
-        <TooltipContent className="px-2 py-1 text-xs">
-          Click to copy
-        </TooltipContent>
-      </Tooltip>
-    </TooltipProvider>
+    <Button
+      variant="ghost"
+      size="icon"
+      className="relative h-6 w-6"
+      aria-label="Copy to clipboard"
+      onClick={handleCopy}
+    >
+      <div className="absolute inset-0 flex items-center justify-center">
+        <Check
+          className={cn(
+            "h-4 w-4 transition-transform ease-in-out",
+            isCopied ? "scale-100" : "scale-0",
+          )}
+        />
+      </div>
+      <Copy
+        className={cn(
+          "h-4 w-4 transition-transform ease-in-out",
+          isCopied ? "scale-0" : "scale-100",
+        )}
+      />
+    </Button>
   );
 }

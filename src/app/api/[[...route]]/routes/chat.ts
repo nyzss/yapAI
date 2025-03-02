@@ -111,7 +111,6 @@ export const chatRoute = new Hono<HonoType>()
                   .map((c) => c.text)
                   .join(""),
               };
-              console.log("MESSAGE", message);
               return {
                 userId: user.id,
                 content: message,
