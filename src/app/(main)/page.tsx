@@ -1,14 +1,12 @@
 "use client";
 
-import Markdown from "react-markdown";
 import { Message, useChat } from "@ai-sdk/react";
-import { CodeHighlight } from "@/components/chat/code";
-import { useEffect, useRef, FormEvent, KeyboardEvent } from "react";
+import { useEffect, FormEvent, KeyboardEvent } from "react";
 import { useLocalStorageState } from "ahooks";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import MessageHistory from "@/components/chat/message-history";
 
 export default function Home() {
   const [messageHistory, setMessageHistory] = useLocalStorageState<Message[]>(
@@ -21,7 +19,6 @@ export default function Home() {
     useChat({
       api: "/api/chat",
     });
-  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (messageHistory && messageHistory.length > 0) {
@@ -33,10 +30,6 @@ export default function Home() {
   useEffect(() => {
     if (messages.length > 0) {
       setMessageHistory(messages);
-      // scroll to bottom when new messages arrive
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
     }
   }, [messages, setMessageHistory]);
 
@@ -53,55 +46,7 @@ export default function Home() {
 
   return (
     <div className="absolute inset-0 flex flex-col">
-      <div
-        className="w-full flex-1 overflow-y-auto"
-        style={{ scrollbarWidth: "thin" }}
-      >
-        <div
-          role="log"
-          aria-label="Chat messages"
-          aria-live="polite"
-          className="flex w-full flex-col space-y-6 p-4 px-6 pb-36"
-        >
-          {messages.length === 0 && (
-            <div className="text-muted-foreground py-12 text-center">
-              <p>Start a conversation with the AI assistant</p>
-            </div>
-          )}
-
-          {messages.map((m) => (
-            <div
-              key={m.id}
-              className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-            >
-              <div
-                className={cn(
-                  "prose prose-neutral dark:prose-invert",
-                  m.role === "user"
-                    ? "bg-muted text-primary max-w-[80%] rounded-lg p-4 break-words"
-                    : "max-w-[80%] rounded-lg p-4 break-words",
-                )}
-              >
-                <Markdown
-                  components={{
-                    code: CodeHighlight,
-                    pre: (props) => (
-                      <pre
-                        {...props}
-                        className="max-w-full overflow-x-auto"
-                        style={{ maxWidth: "100%" }}
-                      />
-                    ),
-                  }}
-                >
-                  {m.content}
-                </Markdown>
-              </div>
-            </div>
-          ))}
-          <div ref={messagesEndRef} />
-        </div>
-      </div>
+      <MessageHistory messages={messages} />
 
       <div className="pointer-events-none absolute inset-0 flex items-end">
         <div className="from-background pointer-events-auto w-full bg-gradient-to-t to-transparent p-4 pt-16">
