@@ -150,7 +150,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenuItem>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/chat">
+              <Link href="/">
                 <MessageCirclePlus />
                 <span>New Chat</span>
               </Link>
