@@ -5,18 +5,14 @@ import {
   BookOpen,
   Bot,
   Command,
-  Frame,
   LifeBuoy,
-  Map,
-  PieChart,
+  MessageCirclePlus,
   Send,
   Settings2,
   SquareTerminal,
 } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
-import { NavProjects } from "@/components/sidebar/nav-projects";
-import { NavSecondary } from "@/components/sidebar/nav-secondary";
 import { NavUser } from "@/components/sidebar/nav-user";
 import {
   Sidebar,
@@ -27,6 +23,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import Link from "next/link";
 
 const data = {
   user: {
@@ -40,6 +37,7 @@ const data = {
       url: "#",
       icon: SquareTerminal,
       isActive: true,
+      type: "folder",
       items: [
         {
           title: "History",
@@ -59,6 +57,7 @@ const data = {
       title: "Models",
       url: "#",
       icon: Bot,
+      type: "folder",
       items: [
         {
           title: "Genesis",
@@ -78,6 +77,7 @@ const data = {
       title: "Documentation",
       url: "#",
       icon: BookOpen,
+      type: "folder",
       items: [
         {
           title: "Introduction",
@@ -101,6 +101,7 @@ const data = {
       title: "Settings",
       url: "#",
       icon: Settings2,
+      type: "chat",
       items: [
         {
           title: "General",
@@ -135,26 +136,16 @@ const data = {
   ],
   projects: [
     {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "New Chat",
+      url: "/chat",
+      icon: MessageCirclePlus,
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar variant="inset" {...props}>
+    <Sidebar variant="floating" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
@@ -170,12 +161,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <SidebarMenuButton asChild>
+              <Link href="/chat">
+                <MessageCirclePlus />
+                <span>New Chat</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />
