@@ -10,6 +10,9 @@ import MessageHistory from "@/components/chat/message-history";
 export default function Home() {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     api: "/api/chat",
+    experimental_prepareRequestBody({ messages, id }) {
+      return { message: messages[messages.length - 1], id };
+    },
   });
 
   const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
