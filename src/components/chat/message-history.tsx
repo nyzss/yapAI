@@ -54,13 +54,6 @@ export default function MessageHistory({ messages }: { messages: Message[] }) {
               <Markdown
                 components={{
                   code: CodeHighlight,
-                  pre: (props) => (
-                    <pre
-                      {...props}
-                      className="max-w-full overflow-x-auto"
-                      style={{ maxWidth: "100%" }}
-                    />
-                  ),
                 }}
               >
                 {m.content}

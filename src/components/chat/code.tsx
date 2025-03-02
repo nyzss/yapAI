@@ -1,5 +1,5 @@
 import type { JSX, ReactNode } from "react";
-import ShikiHighlighter, { type Element } from "react-shiki";
+import ShikiHighlighter, { isInlineCode, type Element } from "react-shiki";
 import CopyButton from "@/components/ui/copy-button";
 interface CodeHighlightProps {
   className?: string | undefined;
@@ -10,27 +10,31 @@ interface CodeHighlightProps {
 export const CodeHighlight = ({
   className,
   children,
+  node,
   ...props
 }: CodeHighlightProps): JSX.Element => {
   const match = className?.match(/language-(\w+)/);
   const language = match ? match[1] : undefined;
 
-  if (!language) {
-    return (
-      <code {...props} className="bg-muted rounded-md p-1">
-        {String(children)}
-      </code>
-    );
-  }
+  const isInline: boolean | undefined = node ? isInlineCode(node) : undefined;
 
-  return (
+  return !isInline ? (
     <div className="relative">
-      <ShikiHighlighter language={language} theme={"github-light"} {...props}>
+      <ShikiHighlighter
+        language={language}
+        theme={"github-light"}
+        delay={150}
+        {...props}
+      >
         {String(children)}
       </ShikiHighlighter>
       <div className="absolute right-2 bottom-2">
         <CopyButton text={String(children)} className="bg-muted" />
       </div>
     </div>
+  ) : (
+    <code className={className} {...props}>
+      {children}
+    </code>
   );
 };
