@@ -4,7 +4,7 @@ import remarkGfm from "remark-gfm";
 import ShikiHighlighter, { isInlineCode, type Element } from "react-shiki";
 
 import { cn } from "@/lib/utils";
-import { CopyButton } from "@/components/new-chat/copy-button";
+import { CopyButton } from "@/components/chat/copy-button";
 
 interface MarkdownRendererProps {
   children: string;

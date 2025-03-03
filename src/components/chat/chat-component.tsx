@@ -6,11 +6,11 @@ import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAutoScroll } from "@/hooks/use-auto-scroll";
 import { Button } from "@/components/ui/button";
-import { type Message } from "@/components/new-chat/chat-message";
-import { CopyButton } from "@/components/new-chat/copy-button";
-import { MessageInput } from "@/components/new-chat/message-input";
-import { MessageList } from "@/components/new-chat/message-list";
-import { PromptSuggestions } from "@/components/new-chat/prompt-suggestions";
+import { type Message } from "@/components/chat/chat-message";
+import { CopyButton } from "@/components/chat/copy-button";
+import { MessageInput } from "@/components/chat/message-input";
+import { MessageList } from "@/components/chat/message-list";
+import { PromptSuggestions } from "@/components/chat/prompt-suggestions";
 
 interface ChatPropsBase {
   handleSubmit: (
