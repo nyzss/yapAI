@@ -2,6 +2,7 @@
 
 import React, { forwardRef, useState, type ReactElement, useMemo } from "react";
 import { ArrowDown, ThumbsDown, ThumbsUp } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { cn } from "@/lib/utils";
 import { useAutoScroll } from "@/hooks/use-auto-scroll";
@@ -95,45 +96,113 @@ export function ChatComponent({
 
   return (
     <ChatContainer className={className}>
-      {isEmpty && append && suggestions ? (
-        <PromptSuggestions
-          label="Try these prompts ✨"
-          append={append}
-          suggestions={suggestions}
-        />
-      ) : null}
-
-      {messages.length > 0 ? (
-        <div className="flex-1 overflow-hidden">
-          <ChatMessages messages={messages}>
-            <MessageList
-              messages={messages}
-              isTyping={isTyping}
-              messageOptions={messageOptions}
+      <div className="relative flex h-full flex-col">
+        {isEmpty && append && suggestions ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.3 }}
+            className="absolute top-0 right-0 left-0 z-10"
+          >
+            <PromptSuggestions
+              label="Try these prompts ✨"
+              append={append}
+              suggestions={suggestions}
             />
-          </ChatMessages>
-        </div>
-      ) : (
-        <div className="flex-1" />
-      )}
+          </motion.div>
+        ) : null}
 
-      <ChatForm
-        className="bg-background shrink-0 border-t py-4"
-        isPending={isGenerating || isTyping}
-        handleSubmit={handleSubmit}
-      >
-        {({ files, setFiles }) => (
-          <MessageInput
-            value={input}
-            onChange={handleInputChange}
-            allowAttachments
-            files={files}
-            setFiles={setFiles}
-            stop={stop}
-            isGenerating={isGenerating}
-          />
-        )}
-      </ChatForm>
+        <AnimatePresence mode="wait">
+          {messages.length > 0 ? (
+            <motion.div
+              key="messages"
+              className="flex-1 overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <ChatMessages messages={messages}>
+                <MessageList
+                  messages={messages}
+                  isTyping={isTyping}
+                  messageOptions={messageOptions}
+                />
+              </ChatMessages>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="empty-space"
+              className="flex-1"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+            />
+          )}
+        </AnimatePresence>
+
+        <motion.div
+          className="w-full rounded-full"
+          initial={{
+            position: isEmpty ? "absolute" : "relative",
+            maxWidth: isEmpty ? "42rem" : "100%",
+            margin: isEmpty ? "0 auto" : "0",
+            left: isEmpty ? "50%" : "auto",
+            top: isEmpty ? "50%" : "auto",
+            x: isEmpty ? "-50%" : 0,
+            y: isEmpty ? "-50%" : 0,
+            boxShadow: isEmpty
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+              : "none",
+            borderTop: isEmpty ? "none" : "1px solid hsl(var(--border))",
+            borderColor: isEmpty ? "transparent" : "hsl(var(--border))",
+          }}
+          style={{
+            position: isEmpty ? "absolute" : "relative",
+          }}
+          animate={{
+            position: isEmpty ? "absolute" : "relative",
+            maxWidth: isEmpty ? "42rem" : "100%",
+            left: isEmpty ? "50%" : "auto",
+            top: isEmpty ? "50%" : "auto",
+            x: isEmpty ? "-50%" : 0,
+            y: isEmpty ? "-50%" : 0,
+            boxShadow: isEmpty
+              ? "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
+              : "none",
+            borderTop: isEmpty ? "none" : "1px solid hsl(var(--border))",
+            borderColor: isEmpty ? "transparent" : "hsl(var(--border))",
+          }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 25,
+          }}
+        >
+          <ChatForm
+            className={cn(
+              "w-full shrink-0 rounded-full",
+              isEmpty ? "border-0" : "px-4 py-4",
+            )}
+            isPending={isGenerating || isTyping}
+            handleSubmit={handleSubmit}
+          >
+            {({ files, setFiles }) => (
+              <MessageInput
+                value={input}
+                onChange={handleInputChange}
+                allowAttachments
+                files={files}
+                setFiles={setFiles}
+                stop={stop}
+                isGenerating={isGenerating}
+                className="text-md shadow-xl"
+              />
+            )}
+          </ChatForm>
+        </motion.div>
+      </div>
     </ChatContainer>
   );
 }
