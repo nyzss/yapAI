@@ -11,6 +11,7 @@ import { CopyButton } from "@/components/new-chat/copy-button";
 import { MessageInput } from "@/components/new-chat/message-input";
 import { MessageList } from "@/components/new-chat/message-list";
 import { PromptSuggestions } from "@/components/new-chat/prompt-suggestions";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatPropsBase {
   handleSubmit: (
@@ -104,17 +105,21 @@ export function ChatComponent({
       ) : null}
 
       {messages.length > 0 ? (
-        <ChatMessages messages={messages}>
-          <MessageList
-            messages={messages}
-            isTyping={isTyping}
-            messageOptions={messageOptions}
-          />
-        </ChatMessages>
-      ) : null}
+        <div className="flex-1 overflow-hidden">
+          <ChatMessages messages={messages}>
+            <MessageList
+              messages={messages}
+              isTyping={isTyping}
+              messageOptions={messageOptions}
+            />
+          </ChatMessages>
+        </div>
+      ) : (
+        <div className="flex-1" />
+      )}
 
       <ChatForm
-        className="mt-auto"
+        className="bg-background shrink-0 border-t py-4"
         isPending={isGenerating || isTyping}
         handleSubmit={handleSubmit}
       >
@@ -150,19 +155,17 @@ export const ChatMessages = React.memo(function ChatMessages({
   } = useAutoScroll([messages]);
 
   return (
-    <div
-      className="grid grid-cols-1 overflow-y-auto pb-4"
+    <ScrollArea
+      className="h-full w-full"
       ref={containerRef}
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}
     >
-      <div className="[grid-column:1/1] [grid-row:1/1] max-w-full">
-        {children}
-      </div>
+      <div className="p-4">{children}</div>
 
-      <div className="[grid-column:1/1] [grid-row:1/1] flex flex-1 items-end justify-end">
+      <div className="flex items-end justify-end">
         {!shouldAutoScroll && (
-          <div className="sticky bottom-0 left-0 flex w-full justify-end">
+          <div className="sticky right-4 bottom-4 flex w-full justify-end">
             <Button
               onClick={scrollToBottom}
               className="animate-in fade-in-0 slide-in-from-bottom-1 h-8 w-8 rounded-full ease-in-out"
@@ -174,7 +177,7 @@ export const ChatMessages = React.memo(function ChatMessages({
           </div>
         )}
       </div>
-    </div>
+    </ScrollArea>
   );
 });
 ChatMessages.displayName = "ChatMessages";
@@ -186,7 +189,7 @@ export const ChatContainer = forwardRef<
   return (
     <div
       ref={ref}
-      className={cn("grid max-h-full w-full grid-rows-[1fr_auto]", className)}
+      className={cn("flex h-[calc(100vh-4rem)] w-full flex-col", className)}
       {...props}
     />
   );
