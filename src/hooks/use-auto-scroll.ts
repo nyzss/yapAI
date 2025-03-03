@@ -18,6 +18,11 @@ export function useAutoScroll(dependencies: React.DependencyList) {
     if (containerRef.current) {
       const { scrollTop, scrollHeight, clientHeight } = containerRef.current;
 
+      // fix: prevent auto-scroll when we're at the bottom of the container
+      if (scrollTop + clientHeight > scrollHeight - 2) {
+        return;
+      }
+
       const isScrollingUp = previousScrollTop.current
         ? scrollTop < previousScrollTop.current
         : false;
