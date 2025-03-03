@@ -11,7 +11,6 @@ import { CopyButton } from "@/components/new-chat/copy-button";
 import { MessageInput } from "@/components/new-chat/message-input";
 import { MessageList } from "@/components/new-chat/message-list";
 import { PromptSuggestions } from "@/components/new-chat/prompt-suggestions";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 interface ChatPropsBase {
   handleSubmit: (
@@ -155,13 +154,13 @@ export const ChatMessages = React.memo(function ChatMessages({
   } = useAutoScroll([messages]);
 
   return (
-    <ScrollArea
-      className="h-full w-full"
+    <div
+      className="relative h-full w-full overflow-x-hidden overflow-y-auto"
       ref={containerRef}
       onScroll={handleScroll}
       onTouchStart={handleTouchStart}
     >
-      <div className="p-4">{children}</div>
+      <div className="max-w-full p-4">{children}</div>
 
       <div className="flex items-end justify-end">
         {!shouldAutoScroll && (
@@ -177,7 +176,7 @@ export const ChatMessages = React.memo(function ChatMessages({
           </div>
         )}
       </div>
-    </ScrollArea>
+    </div>
   );
 });
 ChatMessages.displayName = "ChatMessages";

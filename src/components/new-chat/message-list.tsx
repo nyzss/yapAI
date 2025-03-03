@@ -80,7 +80,7 @@ export const MessageList = React.memo(
     messageOptions,
   }: MessageListProps) {
     return (
-      <div className="space-y-4 overflow-visible">
+      <div className="w-full space-y-4 overflow-visible">
         {messages.map((message, index) => (
           <MemoizedMessage
             key={message.id || index}

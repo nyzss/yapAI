@@ -9,7 +9,7 @@ import { FilePreview } from "@/components/new-chat/file-preview";
 import MarkdownRenderer from "@/components/new-chat/markdown-renderer";
 
 const chatBubbleVariants = cva(
-  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[70%]",
+  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[70%] max-w-full overflow-hidden",
   {
     variants: {
       isUser: {
