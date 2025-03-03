@@ -9,7 +9,7 @@ import { FilePreview } from "@/components/new-chat/file-preview";
 import MarkdownRenderer from "@/components/new-chat/markdown-renderer";
 
 const chatBubbleVariants = cva(
-  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[70%] max-w-full overflow-hidden",
+  "group/message relative break-words rounded-lg p-3 text-sm sm:max-w-[70%] max-w-full",
   {
     variants: {
       isUser: {
@@ -138,7 +138,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({
         </div>
 
         {role === "assistant" && actions ? (
-          <div className="bg-background text-foreground absolute right-2 -bottom-4 flex space-x-1 rounded-lg border p-1 opacity-0 transition-opacity group-hover/message:opacity-100">
+          <div className="bg-background text-foreground absolute -right-1 -bottom-4 z-10 flex space-x-1 rounded-lg border p-1 opacity-0 transition-opacity group-hover/message:opacity-100">
             {actions}
           </div>
         ) : null}

@@ -31,7 +31,7 @@ const CodeHighlight = React.memo(
 
     if (!isInline && language) {
       return (
-        <div className="group/code relative mb-4">
+        <div className="group/code relative my-2 mb-4">
           <ShikiHighlighter
             language={language}
             theme="github-dark"
