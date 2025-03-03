@@ -1,11 +1,11 @@
-"use client";
-
 import Chat from "@/components/chat/chat";
 
-export default function Home() {
+export default async function Home() {
+  const chatId = crypto.randomUUID();
+
   return (
     <div>
-      <Chat id={null} />
+      <Chat id={chatId} />
     </div>
   );
 }
