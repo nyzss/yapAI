@@ -3,10 +3,12 @@ import { appendClientMessage, AssistantMessage, Message, streamText } from "ai";
 import { openai } from "@ai-sdk/openai";
 import { HonoType } from "../route";
 import { db } from "@/db";
-import { chatsTable, messagesTable } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
+import { chatsTable, messagesTable, foldersTable } from "@/db/schema";
+import { and, eq, isNull } from "drizzle-orm";
 import { zValidator } from "@hono/zod-validator";
 import { z } from "zod";
+import { transformChats } from "@/lib/utils";
+import { HistoryItem } from "@/types";
 
 const getChat = async ({ id, userId }: { id: string; userId: string }) => {
   const chat = await db.query.chatsTable.findFirst({
@@ -48,6 +50,40 @@ const handleChat = async ({ id, userId }: { id: string; userId: string }) => {
 };
 
 export const chatRoute = new Hono<HonoType>()
+  .get("/", async (c) => {
+    const user = c.get("user");
+
+    if (!user) {
+      return c.json({ error: "Unauthorized" }, 401);
+    }
+
+    const chats = await db
+      .select()
+      .from(chatsTable)
+      .where(and(eq(chatsTable.userId, user.id), isNull(chatsTable.folderId)));
+
+    const folders = await db.query.foldersTable.findMany({
+      where: eq(foldersTable.userId, user.id),
+      with: {
+        chats: true,
+      },
+    });
+
+    const history: HistoryItem[] = [
+      ...folders.map((f) => ({
+        id: f.id,
+        title: f.name,
+        type: "folder" as const,
+        items: transformChats(f.chats),
+        createdAt: f.createdAt,
+        updatedAt: f.updatedAt,
+      })),
+      ...transformChats(chats),
+    ];
+
+    return c.json({ history });
+  })
+
   .get("/:id", zValidator("param", z.object({ id: z.string() })), async (c) => {
     const user = c.get("user");
 

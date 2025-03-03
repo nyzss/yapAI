@@ -1,7 +1,7 @@
 "use client";
 
 import * as React from "react";
-import { Command, MessageCirclePlus } from "lucide-react";
+import { Command, Loader2, MessageCirclePlus } from "lucide-react";
 
 import { NavMain } from "@/components/sidebar/nav-main";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -15,119 +15,23 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
-
-const data = {
-  navMain: [
-    {
-      title: "Chat History",
-      url: "#",
-      isActive: true,
-      type: "folder",
-      items: [
-        {
-          title: "Discussing AI Ethics",
-          url: "#",
-        },
-        {
-          title: "Understanding Quantum Computing",
-          url: "#",
-        },
-        {
-          title: "Exploring Space Technologies",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "AI Conversations",
-      url: "#",
-      type: "folder",
-      items: [
-        {
-          title: "Future of Machine Learning",
-          url: "#",
-        },
-        {
-          title: "AI in Everyday Life",
-          url: "#",
-        },
-        {
-          title: "Deep Learning Breakthroughs",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Tech Discussions",
-      url: "#",
-      type: "folder",
-      items: [
-        {
-          title: "Latest in Web Development",
-          url: "#",
-        },
-        {
-          title: "Cybersecurity Trends",
-          url: "#",
-        },
-        {
-          title: "Blockchain Innovations",
-          url: "#",
-        },
-        {
-          title: "Cloud Computing Advances",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "User Settings",
-      url: "#",
-      type: "chat",
-      items: [
-        {
-          title: "Profile",
-          url: "#",
-        },
-        {
-          title: "Notifications",
-          url: "#",
-        },
-        {
-          title: "Privacy",
-          url: "#",
-        },
-        {
-          title: "Account",
-          url: "#",
-        },
-      ],
-    },
-  ],
-};
+import { useQuery } from "@tanstack/react-query";
+import { client } from "@/lib/rpc";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  // const router = useRouter();
+  const { data: chats, isPending } = useQuery({
+    queryKey: ["chats"],
+    queryFn: async () => {
+      const resp = await client.api.chat.$get();
+      const data = await resp.json();
 
-  // const createChatMutation = useMutation({
-  //   mutationFn: async () => {
-  //     const response = await client.api.chat.create.$post();
+      if ("error" in data) {
+        throw new Error(data.error);
+      }
 
-  //     const data = await response.json();
-
-  //     if (data.error !== null) {
-  //       throw new Error(data.error);
-  //     }
-
-  //     return data;
-  //   },
-  // });
-
-  // const handleCreateChat = async () => {
-  //   const data = await createChatMutation.mutateAsync();
-
-  //   router.push(`/chat/${data.chat.id}`);
-  // };
+      return data;
+    },
+  });
 
   return (
     <Sidebar variant="floating" {...props}>
@@ -159,7 +63,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        {isPending ? (
+          <div className="flex h-full w-full items-center justify-center">
+            <Loader2 className="size-4 animate-spin" />
+          </div>
+        ) : (
+          chats && <NavMain chats={chats.history} />
+        )}
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

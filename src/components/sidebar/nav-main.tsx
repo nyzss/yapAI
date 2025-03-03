@@ -18,34 +18,23 @@ import {
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import { ScrollArea } from "../ui/scroll-area";
+import Link from "next/link";
+import { HistoryItem } from "@/types";
 
-export function NavMain({
-  items,
-}: {
-  items: {
-    title: string;
-    url: string;
-    type: string;
-    isActive?: boolean;
-    items?: {
-      title: string;
-      url: string;
-    }[];
-  }[];
-}) {
+export function NavMain({ chats }: { chats: HistoryItem[] }) {
   return (
     <SidebarGroup>
-      <SidebarGroupLabel>Platform</SidebarGroupLabel>
+      <SidebarGroupLabel>History</SidebarGroupLabel>
       <ScrollArea>
         <SidebarMenu>
-          {items
+          {chats
             .sort((a, b) => b.type.localeCompare(a.type))
             .map((item) =>
               item.type === "folder" ? (
                 <Collapsible
-                  key={item.title}
+                  key={item.id}
                   asChild
-                  defaultOpen={item.isActive}
+                  // defaultOpen={item.isActive}
                   className="group/collapsible"
                 >
                   <SidebarMenuItem>
@@ -65,9 +54,9 @@ export function NavMain({
                         {item.items?.map((subItem) => (
                           <SidebarMenuSubItem key={subItem.title}>
                             <SidebarMenuSubButton asChild>
-                              <a href={subItem.url}>
+                              <Link href={`/c/${subItem.id}`}>
                                 <span>{subItem.title}</span>
-                              </a>
+                              </Link>
                             </SidebarMenuSubButton>
                           </SidebarMenuSubItem>
                         ))}
@@ -78,9 +67,9 @@ export function NavMain({
               ) : (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild tooltip={item.title}>
-                    <a href={item.url}>
+                    <Link href={`/c/${item.id}`}>
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ),
@@ -89,15 +78,4 @@ export function NavMain({
       </ScrollArea>
     </SidebarGroup>
   );
-
-  // return (
-  //   <SidebarGroup>
-  //     <SidebarGroupLabel>Platform</SidebarGroupLabel>
-  //     <SidebarMenu>
-  //       {items.map((item) => (
-
-  //       ))}
-  //     </SidebarMenu>
-  //   </SidebarGroup>
-  // );
 }
