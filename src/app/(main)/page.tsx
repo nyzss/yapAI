@@ -1,11 +1,11 @@
-import Chat from "@/components/chat/chat";
+import ChatLanding from "@/components/chat/chat-landing";
 
 export default async function Home() {
   const chatId = crypto.randomUUID();
 
   return (
     <div>
-      <Chat id={chatId} />
+      <ChatLanding id={chatId} newChat={true} />
     </div>
   );
 }

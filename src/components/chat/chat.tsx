@@ -1,9 +1,15 @@
 "use client";
 
-import { useChat } from "@ai-sdk/react";
+import { Message, useChat } from "@ai-sdk/react";
 import { ChatComponent } from "@/components/chat/chat-component";
 
-export default function Chat({ id }: { id: string }) {
+export default function Chat({
+  id,
+  initialMessages,
+}: {
+  id: string;
+  initialMessages?: Message[];
+}) {
   const { messages, input, handleInputChange, handleSubmit, status, stop } =
     useChat({
       id,
@@ -15,6 +21,7 @@ export default function Chat({ id }: { id: string }) {
       onError(error) {
         console.log(error);
       },
+      initialMessages,
     });
 
   return (

@@ -36,7 +36,7 @@ interface ChatPropsWithoutSuggestions extends ChatPropsBase {
 }
 
 interface ChatPropsWithSuggestions extends ChatPropsBase {
-  append: (message: { role: "user"; content: string }) => void;
+  append?: (message: { role: "user"; content: string }) => void;
   suggestions: string[];
 }
 

@@ -27,53 +27,46 @@ export function NavMain({ chats }: { chats: HistoryItem[] }) {
       <SidebarGroupLabel>History</SidebarGroupLabel>
       <ScrollArea>
         <SidebarMenu>
-          {chats
-            .sort((a, b) => b.type.localeCompare(a.type))
-            .map((item) =>
-              item.type === "folder" ? (
-                <Collapsible
-                  key={item.id}
-                  asChild
-                  // defaultOpen={item.isActive}
-                  className="group/collapsible"
-                >
-                  <SidebarMenuItem>
-                    <CollapsibleTrigger asChild>
-                      <SidebarMenuButton
-                        tooltip={item.title}
-                        className="bg-muted cursor-pointer"
-                        variant={"outline"}
-                      >
-                        <Folder />
-                        <span>{item.title}</span>
-                        <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                      </SidebarMenuButton>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <SidebarMenuSub>
-                        {item.items?.map((subItem) => (
-                          <SidebarMenuSubItem key={subItem.title}>
-                            <SidebarMenuSubButton asChild>
-                              <Link href={`/c/${subItem.id}`}>
-                                <span>{subItem.title}</span>
-                              </Link>
-                            </SidebarMenuSubButton>
-                          </SidebarMenuSubItem>
-                        ))}
-                      </SidebarMenuSub>
-                    </CollapsibleContent>
-                  </SidebarMenuItem>
-                </Collapsible>
-              ) : (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild tooltip={item.title}>
-                    <Link href={`/c/${item.id}`}>
+          {chats.map((item) =>
+            item.type === "folder" ? (
+              <Collapsible key={item.id} asChild className="group/collapsible">
+                <SidebarMenuItem>
+                  <CollapsibleTrigger asChild>
+                    <SidebarMenuButton
+                      tooltip={item.title}
+                      className="bg-muted cursor-pointer"
+                      variant={"outline"}
+                    >
+                      <Folder />
                       <span>{item.title}</span>
-                    </Link>
-                  </SidebarMenuButton>
+                      <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                    </SidebarMenuButton>
+                  </CollapsibleTrigger>
+                  <CollapsibleContent>
+                    <SidebarMenuSub>
+                      {item.items?.map((subItem) => (
+                        <SidebarMenuSubItem key={subItem.title}>
+                          <SidebarMenuSubButton asChild>
+                            <Link href={`/c/${subItem.id}`}>
+                              <span>{subItem.title}</span>
+                            </Link>
+                          </SidebarMenuSubButton>
+                        </SidebarMenuSubItem>
+                      ))}
+                    </SidebarMenuSub>
+                  </CollapsibleContent>
                 </SidebarMenuItem>
-              ),
-            )}
+              </Collapsible>
+            ) : (
+              <SidebarMenuItem key={item.id}>
+                <SidebarMenuButton asChild tooltip={item.title}>
+                  <Link href={`/c/${item.id}`}>
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ),
+          )}
         </SidebarMenu>
       </ScrollArea>
     </SidebarGroup>

@@ -104,7 +104,7 @@ export const chatRoute = new Hono<HonoType>()
       return c.json({ error: "Chat not found" }, 404);
     }
 
-    return c.json({ chat, error: null });
+    return c.json({ chat });
   })
   .post(
     "/",

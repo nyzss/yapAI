@@ -1,4 +1,4 @@
-import Chat from "@/components/chat/chat";
+import ChatLanding from "@/components/chat/chat-landing";
 import React from "react";
 
 export default async function ChatPage({
@@ -9,7 +9,7 @@ export default async function ChatPage({
   const id = (await params).id;
   return (
     <div>
-      <Chat id={id} />
+      <ChatLanding id={id} newChat={false} />
     </div>
   );
 }
